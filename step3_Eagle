@@ -1,0 +1,62 @@
+'''
+清洗key-values字段
+获得以下内容：
+批文编号
+佩戴周期
+直径
+厚度
+含水
+需要待修缮的点有：
+抛异常存在过多的情况
+'''
+df2 = pd.read_csv('color0615.csv',encoding = 'gb18030')
+m=0
+do1=[]
+do2=[]
+do3=[]
+do4=[]
+do5=[]
+df3 = df2['keyValues']
+df3
+for i in df3:
+    try:
+        if str(i) == str(dddd):
+            sku.append('无')
+            color.append('无')
+            opop.append('无')
+            continue
+        do = df3[m]
+        dist1=do.replace('\'','\"')
+        dist2 = pd.read_json(dist1)
+        dist2.index=dist2['key']
+        dist3 = dist2.loc['批准文号'].values[1]
+        dist4 = dist2.loc['佩戴周期'].values[1]
+        dist5 = dist2.loc['直径'].values[1]
+        dist6 = dist2.loc['厚度'].values[1]
+        dist7 = dist2.loc['含水'].values[1]
+        do1.append(dist3)
+        do2.append(dist4)
+        do3.append(dist5)
+        do4.append(dist6)
+        do5.append(dist7)
+        m = m + 1
+    except Exception :
+        print(m+2)
+        do1.append(dist3)
+        do2.append('未')
+        do3.append(dist5)
+        do4.append('未')
+        do5.append(dist7)
+        m = m + 1
+        continue
+print(do1)
+print(do2)
+print(do3)
+print(do4)
+print(do5)
+df2['批准文号'] = do1
+df2['佩戴周期'] = do2
+df2['直径'] = do3
+df2['厚度'] = do4
+df2['含水'] = do5
+df2.to_csv('color0615plus3.csv')
