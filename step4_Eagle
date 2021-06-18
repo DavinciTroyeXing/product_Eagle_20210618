@@ -1,0 +1,65 @@
+'''
+对于skuoptions进行清洗
+'''
+
+import pandas as pd
+import re
+data=pd.read_csv('color0615.csv')
+#,encoding = 'gb18030'
+import numpy as np
+dddd=np.nan
+opop=[]
+sku=[]
+color=[]
+ids=[]
+prices=[]
+stocksizes=[]
+i=1
+m=0
+idlist=[]
+for sp in data['id']:
+    ids.append(sp)
+for g in data['skuOptions']:
+    if str(g) == str(dddd):
+        sku.append('无')
+        color.append('无')
+        opop.append('无')
+        continue
+    reg=re.compile(r'({.*?None})')
+    la=re.findall(reg,g)
+    for k in la:
+        opop.append(k)
+        idlist.append(ids[m])
+    m=m+1
+opop2=[]
+idk=[]
+m=0
+idlist2=[]
+for i in opop:
+    if i=='无':
+        m=m+1
+        continue
+    i=i.replace('None','\'NONE\'')
+    i=i.replace('\'','\"')
+    opop2.append(i)
+    idlist2.append(idlist[m])
+    m=m+1
+opop2
+
+from io import StringIO
+
+mm=0
+idlist3=[]
+dataout=pd.DataFrame()
+for kl in opop2:
+    try:       
+        jj=pd.read_json(StringIO(kl))
+        dataout=dataout.append(jj)
+        idlist3.append(idlist2[mm])
+        mm=mm+1
+    except Exception :
+        mm=mm+1
+        continue
+dataout['ids']=idlist3
+dataout.to_csv('color0615_skuoptions.csv')
+
