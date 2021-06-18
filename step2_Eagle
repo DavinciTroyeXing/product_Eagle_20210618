@@ -1,0 +1,31 @@
+'''
+对于key-values中的
+'''
+# coding:utf-8
+import pandas as pd
+import requests
+import time
+import jsonpath
+df2 = pd.read_csv('color0615.csv',encoding = 'gb18030')
+#,encoding = 'gb18030'
+m=0
+do1=[]
+do2=[]
+do3=[]
+do4=[]
+do5=[]
+df3 = df2['keyValues']
+df3
+
+import pandas as pd
+for m in range(0,299):
+    try:
+        df3[m]
+        do = df3[m]
+        i=do.replace('\'','\"')
+        i
+        j = pd.read_json(i)
+        j
+    except Exception :
+        print(m+2)
+        continue
