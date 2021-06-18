@@ -1,0 +1,41 @@
+'''
+在周一选定上周前top300的id,进行拉取
+每周的id数量应该是基于上上周拉取的id数加上上周拉取的id数的累加，逐渐递增
+需要对于每周的进行记录，放在C:\Users\EDZ\Desktop\产品花色监控\商品ID记录.xlsx中 
+'''
+# coding:utf-8
+import pandas as pd
+import requests
+import time
+import jsonpath
+
+headers = {
+    "Accept-Encoding": "gzip",
+    "Connection": "close"
+}
+
+df = pd.read_excel('0617.xlsx')
+id_list = []
+for i in range(len(df)):
+    id = df['id'][i]
+    id_list.append(id)
+    
+df = pd.DataFrame()
+for id in id_list:
+    url = "http://api01.idataapi.cn:8000/product/tmallpro?id=%s&apikey=wGxFepbAAFyWU1DUC93FuN0g4IXncLgqBzWAecJrbgItHWHIwPwjBK00R1veUYRg"%id
+    count = 0
+    while True:
+        count = count + 1
+        if count > 5:
+            break
+        try:
+            r = requests.get(url, headers=headers)
+            data = r.json()
+            data1 = data['data'][0]
+            df = df.append(data1, ignore_index=True)
+            break
+        except:
+            time.sleep(5)
+            continue
+ df.to_csv('color0617.csv')
+          
